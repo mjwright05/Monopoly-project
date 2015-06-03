@@ -310,6 +310,14 @@ public class Driver implements ActionListener {
 						myGame.getPlayer(1).addMoney(((Street)myGame.getBoard().getSquare(myGame.getPlayer(0).getLocation())).getRent());
 					}
 				}
+				else if(myGame.getTurn() % 2 ==1 )
+				{
+					if((myGame.getBoard().getSquare(myGame.getPlayer(1).getLocation())).getOwner() == myGame.getPlayer(0) && ((myGame.getBoard().getSquare(myGame.getPlayer(1).getLocation())).getOwner() != null))
+					{
+						myGame.getPlayer(1).pay(((Street)myGame.getBoard().getSquare(myGame.getPlayer(1).getLocation())).getRent());
+						myGame.getPlayer(0).addMoney(((Street)myGame.getBoard().getSquare(myGame.getPlayer(1).getLocation())).getRent());
+					}
+				}
 				p1Money.setText("$" + myGame.getPlayer(0).getMoney());
 				p2Money.setText("$" + myGame.getPlayer(1).getMoney());
 			}
