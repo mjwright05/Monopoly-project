@@ -8,6 +8,7 @@ public class Player {
 	private Dice[] myDice;
 	private ArrayList<Square> myProperties = new ArrayList();
 	private ArrayList<Railroad> myRail = new ArrayList();
+	private ArrayList<GetOutOfJail> out = new ArrayList();
 	public Player()
 	{
 		this.myName = "";
@@ -133,5 +134,16 @@ public class Player {
 	public void addMoney(int money)
 	{
 		this.myMoney += money;
+	}
+	
+	public void addJailCard(GetOutOfJail o)
+	{
+		this.out.add(o);
+	}
+	
+	public void useJailCard()
+	{
+		if(out.size() >= 1)
+			this.out.remove(out.size()-1);
 	}
 }

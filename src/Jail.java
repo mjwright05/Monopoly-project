@@ -37,4 +37,9 @@ public class Jail extends Square{
 	{
 		return this.goToJailIndex;
 	}
+	
+	public int getTurn()
+	{
+		return turns;
+	}
 }
