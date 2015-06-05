@@ -23,7 +23,8 @@ public class Jail extends Square{
 		int roll2 = (int) ( ( Math.random(  ) * 6 ) + 1 );
 		if(roll1 == roll2)
 		{
-			turns++;
+			turns =0;
+			this.letOut();
 			return roll1+roll2;
 		}
 		else
@@ -41,5 +42,15 @@ public class Jail extends Square{
 	public int getTurn()
 	{
 		return turns;
+	}
+	
+	public Player getPrisoner()
+	{
+		return this.prisoner;
+	}
+	
+	public void letOut()
+	{
+		this.prisoner = null;
 	}
 }

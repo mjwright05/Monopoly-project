@@ -9,6 +9,7 @@ public class Player {
 	private ArrayList<Square> myProperties = new ArrayList();
 	private ArrayList<Railroad> myRail = new ArrayList();
 	private ArrayList<GetOutOfJail> out = new ArrayList();
+	
 	public Player()
 	{
 		this.myName = "";
@@ -45,6 +46,23 @@ public class Player {
 			this.myLocation = endTotal - 40;
 			return this.myLocation;
 		}
+	}
+	
+	public int move(int dice)
+	{
+		int end = myLocation + dice;
+		if(end <= 39)
+		{
+			this.myLocation = end;
+			return this.myLocation;
+		}
+		else		
+		{
+			this.myMoney += 200;
+			this.myLocation = end - 40;
+			return this.myLocation;
+		}
+		
 	}
 	
 	public void setLocation(int a)
@@ -97,11 +115,15 @@ public class Player {
 				return this.myMoney;
 			}
 			
-			else
+			else if (house.getOwner() == null)
 			{
 				this.myMoney-= house.getCost();
 				((Street)house).setPlayer(this);
 				myProperties.add(house);
+				return this.myMoney;
+			}
+			else
+			{
 				return this.myMoney;
 			}
 		}

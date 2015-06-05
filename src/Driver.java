@@ -300,10 +300,10 @@ public class Driver implements ActionListener {
 						dList[i].setElementAt("  ", 1);
 						myList[i].setModel(dList[i]);
 					}
+					canRoll = false;
 				}
 				if(myGame.getTurn() % 2 ==0 )
 				{
-					
 					if((myGame.getBoard().getSquare(myGame.getPlayer(0).getLocation())).getOwner() == myGame.getPlayer(1) && ((myGame.getBoard().getSquare(myGame.getPlayer(0).getLocation())).getOwner() != null))
 					{
 						myGame.getPlayer(0).pay(((Street)myGame.getBoard().getSquare(myGame.getPlayer(0).getLocation())).getRent());
@@ -326,11 +326,112 @@ public class Driver implements ActionListener {
 		
 		if(e.getSource() == p1EndTurn)
 		{
-			myGame.endTurn();
+			if(myGame.getTurn() %2 == 0)
+			{
+				myGame.endTurn();
+				canRoll = true;
+				((Jail)(myGame.getBoard().getJail())).putInJail(myGame.getPlayer(1));
+			}
+			if(((Jail)(myGame.getBoard().getJail())).getPrisoner() == myGame.getPlayer(1))
+			{
+				if(myGame.getPlayer(0).getLocation() != 10)
+				{
+					dList[10].setElementAt("p2", 1);
+					myList[10].setModel(dList[10]);
+				}
+				else
+				{
+					dList[10].setElementAt("p1", 0);
+					dList[10].setElementAt("p2", 1);
+					myList[10].setModel(dList[10]);
+				}
+				Object[] options = {"Roll",
+	                    "Use get out card",
+	                    "pay $50"};
+				int reply = JOptionPane.showOptionDialog(null,"You are in Jail.  Pick a way to get out.","Jail",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+				if(reply == JOptionPane.YES_OPTION)
+				{
+					int roll = ((Jail)myGame.getBoard().getJail()).roll();
+					myGame.getPlayer(1).move(roll);
+				}
+				else if(reply == JOptionPane.NO_OPTION)
+				{
+					myGame.getPlayer(1).takeTurn();
+					for(int i =0; i<40;i++)
+					{
+						if(myGame.getPlayer(0).getLocation() == i)
+						{
+							dList[i].setElementAt("p1", 0);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt(" ", 0);
+							myList[i].setModel(dList[i]);
+						}
+						
+						if(myGame.getPlayer(1).getLocation() == i)
+						{
+							dList[i].setElementAt("p2", 1);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt("  ", 1);
+							myList[i].setModel(dList[i]);
+						}
+						canRoll = false;
+					}
+				}
+				else if(reply == JOptionPane.CANCEL_OPTION)
+				{
+					myGame.getPlayer(1).pay(50);
+					p2Money.setText("$"+myGame.getPlayer(1).getMoney());
+					myGame.playRound();
+					((Jail)myGame.getBoard().getJail()).letOut();
+					for(int i =0; i<40;i++)
+					{
+						if(myGame.getPlayer(0).getLocation() == i)
+						{
+							dList[i].setElementAt("p1", 0);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt(" ", 0);
+							myList[i].setModel(dList[i]);
+						}
+						
+						if(myGame.getPlayer(1).getLocation() == i)
+						{
+							dList[i].setElementAt("p2", 1);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt("  ", 1);
+							myList[i].setModel(dList[i]);
+						}
+						canRoll = false;
+					}
+				}
+			}
 		}
 		if(e.getSource() == p2EndTurn)
 		{
-			myGame.endTurn();
+			if(myGame.getTurn() %2 == 1)
+			{
+				myGame.endTurn();
+				canRoll = true;
+			}
+			
+			if(((Jail)(myGame.getBoard().getJail())).getPrisoner() == myGame.getPlayer(0))
+			{
+				Object[] options1 = {"Roll",
+	                    "Use get out card",
+	                    "pay $50"};
+				int reply1 = JOptionPane.showOptionDialog(null,"You are in Jail.  Pick a way to get out.","Jail",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, null, options1, options1[2]);
+			}
 		}
 		if(e.getSource() == p1BuyStreet)
 		{
@@ -362,8 +463,8 @@ public class Driver implements ActionListener {
 		{
 			if(e.getSource() == p1Prop.get(i))
 			{
-				int reply = JOptionPane.showConfirmDialog(null,"Number of Houses: "+((Street) (myGame.getPlayer(0).getProperty(i))).getHouses()+ "\n Would you like to buy another house?","Houses",JOptionPane.YES_NO_OPTION);
-				if(reply == JOptionPane.YES_OPTION)
+				int reply2 = JOptionPane.showConfirmDialog(null,"Number of Houses: "+((Street) (myGame.getPlayer(0).getProperty(i))).getHouses()+ "\n Would you like to buy another house?","Houses",JOptionPane.YES_NO_OPTION);
+				if(reply2 == JOptionPane.YES_OPTION)
 				{
 					myGame.getPlayer(0).buyHouse(i);
 					p1Money.setText("$" + myGame.getPlayer(0).getMoney());
