@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -96,10 +97,9 @@ public class Driver implements ActionListener {
 			myList[i] = new JList(dList[i]);
 			//myList[i].setPreferredSize(new Dimension(30, 45));
 			myList[i].setLayoutOrientation(JList.VERTICAL);
-			myList[i].setVisibleRowCount(2);
-			myList[i].setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 			myList[i].setOpaque(false);
 			myList[i].setBorder(BorderFactory.createLineBorder(Color.black));
+			myList[i].setSelectionMode(Color.TRANSLUCENT);
 		}
 		//boardPanel.add(squares[0],c);
 		boardPanel.add(myList[0],c);
@@ -302,6 +302,7 @@ public class Driver implements ActionListener {
 					}
 					canRoll = false;
 				}
+				
 				if(myGame.getTurn() % 2 ==0 )
 				{
 					if((myGame.getBoard().getSquare(myGame.getPlayer(0).getLocation())).getOwner() == myGame.getPlayer(1) && ((myGame.getBoard().getSquare(myGame.getPlayer(0).getLocation())).getOwner() != null))
@@ -330,8 +331,8 @@ public class Driver implements ActionListener {
 			{
 				myGame.endTurn();
 				canRoll = true;
-				((Jail)(myGame.getBoard().getJail())).putInJail(myGame.getPlayer(1));
 			}
+			
 			if(((Jail)(myGame.getBoard().getJail())).getPrisoner() == myGame.getPlayer(1))
 			{
 				if(myGame.getPlayer(0).getLocation() != 10)
@@ -353,6 +354,31 @@ public class Driver implements ActionListener {
 				{
 					int roll = ((Jail)myGame.getBoard().getJail()).roll();
 					myGame.getPlayer(1).move(roll);
+					for(int i =0; i<40;i++)
+					{
+						if(myGame.getPlayer(0).getLocation() == i)
+						{
+							dList[i].setElementAt("p1", 0);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt(" ", 0);
+							myList[i].setModel(dList[i]);
+						}
+						
+						if(myGame.getPlayer(1).getLocation() == i)
+						{
+							dList[i].setElementAt("p2", 1);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt("  ", 1);
+							myList[i].setModel(dList[i]);
+						}
+						canRoll = false;
+					}
 				}
 				else if(reply == JOptionPane.NO_OPTION)
 				{
@@ -427,15 +453,118 @@ public class Driver implements ActionListener {
 			
 			if(((Jail)(myGame.getBoard().getJail())).getPrisoner() == myGame.getPlayer(0))
 			{
-				Object[] options1 = {"Roll",
+				if(myGame.getPlayer(1).getLocation() != 10)
+				{
+					dList[10].setElementAt("p1", 0);
+					myList[10].setModel(dList[10]);
+				}
+				else
+				{
+					dList[10].setElementAt("p1", 0);
+					dList[10].setElementAt("p2", 1);
+					myList[10].setModel(dList[10]);
+				}
+				Object[] options = {"Roll",
 	                    "Use get out card",
 	                    "pay $50"};
-				int reply1 = JOptionPane.showOptionDialog(null,"You are in Jail.  Pick a way to get out.","Jail",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, null, options1, options1[2]);
+				int reply1 = JOptionPane.showOptionDialog(null,"You are in Jail.  Pick a way to get out.","Jail",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+				if(reply1 == JOptionPane.YES_OPTION)
+				{
+					int roll1 = ((Jail)myGame.getBoard().getJail()).roll();
+					myGame.getPlayer(0).move(roll1);
+					for(int i =0; i<40;i++)
+					{
+						if(myGame.getPlayer(0).getLocation() == i)
+						{
+							dList[i].setElementAt("p1", 0);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt(" ", 0);
+							myList[i].setModel(dList[i]);
+						}
+						
+						if(myGame.getPlayer(1).getLocation() == i)
+						{
+							dList[i].setElementAt("p2", 1);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt("  ", 1);
+							myList[i].setModel(dList[i]);
+						}
+						canRoll = false;
+					}
+				}
+				else if(reply1 == JOptionPane.NO_OPTION)
+				{
+					myGame.getPlayer(0).takeTurn();
+					for(int i =0; i<40;i++)
+					{
+						if(myGame.getPlayer(0).getLocation() == i)
+						{
+							dList[i].setElementAt("p1", 0);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt(" ", 0);
+							myList[i].setModel(dList[i]);
+						}
+						
+						if(myGame.getPlayer(1).getLocation() == i)
+						{
+							dList[i].setElementAt("p2", 1);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt("  ", 1);
+							myList[i].setModel(dList[i]);
+						}
+						canRoll = false;
+					}
+				}
+				else if(reply1 == JOptionPane.CANCEL_OPTION)
+				{
+					myGame.getPlayer(0).pay(50);
+					p1Money.setText("$"+myGame.getPlayer(0).getMoney());
+					myGame.playRound();
+					((Jail)myGame.getBoard().getJail()).letOut();
+					for(int i =0; i<40;i++)
+					{
+						if(myGame.getPlayer(0).getLocation() == i)
+						{
+							dList[i].setElementAt("p1", 0);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt(" ", 0);
+							myList[i].setModel(dList[i]);
+						}
+						
+						if(myGame.getPlayer(1).getLocation() == i)
+						{
+							dList[i].setElementAt("p2", 1);
+							myList[i].setModel(dList[i]);
+						}
+						else
+						{
+							dList[i].setElementAt("  ", 1);
+							myList[i].setModel(dList[i]);
+						}
+						canRoll = false;
+					}
+				}
 			}
 		}
 		if(e.getSource() == p1BuyStreet)
 		{
-			
+			if(myGame.getBoard().getSquare(myGame.getPlayer(0).getLocation()).getOwner() == null)
+			{
 			myGame.playerBuyLocation(myGame.getPlayer(0).getLocation());
 			p1Money.setText("$"+myGame.getPlayer(0).getMoney());
 			p1Prop.add(new JButton("   "+myGame.getBoard().getSquare(myGame.getPlayer(0).getLocation()).getName()+"   "));
@@ -445,9 +574,12 @@ public class Driver implements ActionListener {
 			p1Properties.revalidate();
 			p1Properties.repaint();
 			numP1++;
+			}
 		}
 		if(e.getSource() == p2BuyStreet)
 		{
+			if(myGame.getBoard().getSquare(myGame.getPlayer(0).getLocation()).getOwner() == null)
+			{
 			myGame.playerBuyLocation(myGame.getPlayer(1).getLocation());
 			p2Money.setText("$"+myGame.getPlayer(1).getMoney());
 			p2Prop.add(new JButton("     "+myGame.getBoard().getSquare(myGame.getPlayer(1).getLocation()).getName()+"     "));
@@ -457,6 +589,7 @@ public class Driver implements ActionListener {
 			p2Properties.revalidate();
 			p2Properties.repaint();
 			numP2++;
+			}
 		}
 		
 		for(int i = 0; i < p1Prop.size(); i++)
