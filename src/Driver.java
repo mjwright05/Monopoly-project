@@ -99,7 +99,6 @@ public class Driver implements ActionListener {
 			myList[i].setLayoutOrientation(JList.VERTICAL);
 			myList[i].setOpaque(false);
 			myList[i].setBorder(BorderFactory.createLineBorder(Color.black));
-			myList[i].setSelectionMode(Color.TRANSLUCENT);
 		}
 		//boardPanel.add(squares[0],c);
 		boardPanel.add(myList[0],c);
