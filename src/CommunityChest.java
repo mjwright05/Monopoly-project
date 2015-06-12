@@ -19,6 +19,7 @@ public class CommunityChest extends Deck{
 		deck.add(new CollectCard("Collect 100", 100));
 		deck.add(new PayCard("Pay 100", 100));
 		deck.add(new PayCard("Pay 150", 150));
-		
+		deck.add(new CollectCard("Collect 10", 10));
+		deck.add(new CollectCard("Collect 100", 100));
 	}
 }
